@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.ruff_cache/
+
+# Python packaging artifacts
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (raw data should not be committed)
+data/raw/*.xlsx
+data/raw/*.csv
+data/processed/
+data/features/
+
+# DVC
+.dvc/cache/
+.dvc/tmp/
+
+# Models (trained models are artifacts, not source code)
+models/*.pt
+models/*.pkl
+models/*.joblib
+
+# MLflow
+mlruns/
+mlflow.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
