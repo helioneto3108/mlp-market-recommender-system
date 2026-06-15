@@ -9,6 +9,7 @@ dependencies = [
     "mlflow>=3.13.0",
     "numpy>=2.4.6",
     "pandas>=2.3.3",
+    "python-dotenv>=1.2.2",
     "scikit-learn>=1.8.0",
     "torch>=2.12.0",
 ]

@@ -2481,6 +2481,7 @@ dependencies = [
     { name = "mlflow" },
     { name = "numpy" },
     { name = "pandas" },
+    { name = "python-dotenv" },
     { name = "scikit-learn" },
     { name = "torch" },
 ]
@@ -2500,6 +2501,7 @@ requires-dist = [
     { name = "mlflow", specifier = ">=3.13.0" },
     { name = "numpy", specifier = ">=2.4.6" },
     { name = "pandas", specifier = ">=2.3.3" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "scikit-learn", specifier = ">=1.8.0" },
     { name = "torch", specifier = ">=2.12.0" },
 ]
