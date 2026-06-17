@@ -30,6 +30,7 @@ data/raw/*.xlsx
 data/raw/*.csv
 data/processed/
 data/features/
+data/test_sample
 
 # DVC
 .dvc/cache/
