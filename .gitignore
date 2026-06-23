@@ -1,2 +1,61 @@
-data/raw/*.csv
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.ruff_cache/
+
+# Jupyter
 .ipynb_checkpoints/
+
+# Data
+data/raw/*.csv
+data/raw/*.xlsx
+data/processed/
+data/features/
+
+# DVC
+.dvc/cache/
+.dvc/tmp/
+
+# Models
+models/*.pt
+models/*.pkl
+models/*.joblib
+models/artifacts/
+
+# MLflow
+mlruns/
+mlflow.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Coverage and tests
+.coverage
+htmlcov/
+.pytest_cache/

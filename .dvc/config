@@ -1,0 +1,4 @@
+[core]
+    remote = dagshub-remote
+['remote "dagshub-remote"']
+    url = https://dagshub.com/9MLET-GP16-Team/mlp-market-recommender-system.dvc
