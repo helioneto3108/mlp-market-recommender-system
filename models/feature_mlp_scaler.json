@@ -1,0 +1,44 @@
+{
+  "mean": {
+    "n_orders": 1.030218525580283,
+    "up_order_share": 0.15398395971908674,
+    "up_reorder_rate": 0.2657076603825638,
+    "up_orders_since_last": 9.538316876707604,
+    "up_active_span": 2.365107774734497,
+    "up_purchase_rate": 0.2961369352239392,
+    "u_n_products": 4.5081577869877725,
+    "u_reorder_rate": 0.5017168696423451,
+    "p_n_users": 7.478515659447731,
+    "p_reorder_rate": 0.5345816556869218
+  },
+  "std": {
+    "n_orders": 0.5331152736158362,
+    "up_order_share": 0.16452986351320345,
+    "up_reorder_rate": 0.33986210080798157,
+    "up_orders_since_last": 13.428074384472401,
+    "up_active_span": 0.958730161190033,
+    "up_purchase_rate": 0.2816767613427805,
+    "u_n_products": 0.7344407847177099,
+    "u_reorder_rate": 0.1976865349115662,
+    "p_n_users": 1.8417370600853866,
+    "p_reorder_rate": 0.1624214618432129
+  },
+  "feature_cols": [
+    "n_orders",
+    "up_order_share",
+    "up_reorder_rate",
+    "up_orders_since_last",
+    "up_active_span",
+    "up_purchase_rate",
+    "u_n_products",
+    "u_reorder_rate",
+    "p_n_users",
+    "p_reorder_rate"
+  ],
+  "log_cols": [
+    "n_orders",
+    "up_active_span",
+    "u_n_products",
+    "p_n_users"
+  ]
+}
