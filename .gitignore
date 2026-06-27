@@ -29,7 +29,7 @@ env/
 data/raw/*.xlsx
 data/raw/*.csv
 data/processed/
-data/features/
+data/features/**/*.parquet
 data/test_sample
 data/cache
 
