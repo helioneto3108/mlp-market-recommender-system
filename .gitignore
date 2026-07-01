@@ -38,9 +38,9 @@ data/cache
 .dvc/tmp/
 
 # Models (trained models are artifacts, not source code)
-models/*.pt
-models/*.pkl
-models/*.joblib
+models/**/*.pt
+models/**/*.pkl
+models/**/*.joblib
 
 # MLflow
 mlruns/
