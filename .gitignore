@@ -49,6 +49,10 @@ mlflow.db
 .env.*
 !.env.example
 
+# Claude Code (contexto local/pessoal — não versionar)
+CLAUDE.md
+.claude/
+
 # OS
 .DS_Store
 Thumbs.db
