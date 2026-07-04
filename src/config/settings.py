@@ -2,7 +2,7 @@
 
 Este módulo materializa o princípio de **configuração externalizada**: nenhum
 valor sensível ou dependente de ambiente (URIs, credenciais, caminhos) fica
-hardcoded no código. Trocar de provedor (ex.: DagsHub → GCP) deve exigir
+hardcoded no código. Trocar de provedor de tracking/storage deve exigir
 apenas a edição do `.env`, nunca do código.
 """
 
