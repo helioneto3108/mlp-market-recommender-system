@@ -10,6 +10,7 @@ Duas responsabilidades, ambas com *fit* exclusivamente no split de treino
   partições do treino, sem carregar o dataset inteiro em memória.
 """
 
+import json
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 
@@ -125,3 +126,33 @@ def scale_numeric_columns(
     means = pd.Series(scaler_stats["mean"])
     stds = pd.Series(scaler_stats["std"])
     return ((numeric_df - means) / stds).astype("float32")
+
+
+def save_category_maps(category_maps: CategoryMaps, path: Path) -> None:
+    """Persiste os mapas categóricos em JSON.
+
+    Args:
+        category_maps: Mapas construídos por :func:`build_category_maps`.
+        path: Destino do arquivo JSON.
+    """
+    path.write_text(json.dumps(category_maps, indent=2), encoding="utf-8")
+
+
+def load_category_maps(path: Path) -> CategoryMaps:
+    """Carrega mapas categóricos de JSON, restaurando as chaves inteiras.
+
+    JSON serializa chaves de dicionário como string; sem esta reconversão,
+    ``Series.map`` não encontraria nenhum valor e **todas** as categorias
+    virariam UNK silenciosamente.
+
+    Args:
+        path: Arquivo JSON salvo por :func:`save_category_maps`.
+
+    Returns:
+        Mapas com chaves ``int``, idênticos aos originais.
+    """
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        column: {int(value): index for value, index in mapping.items()}
+        for column, mapping in raw.items()
+    }
