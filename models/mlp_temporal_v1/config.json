@@ -20,5 +20,5 @@
     64
   ],
   "dropout": 0.25,
-  "device": "mps"
+  "device": "cuda"
 }
