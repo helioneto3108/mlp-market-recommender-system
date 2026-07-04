@@ -1,0 +1,31 @@
+{
+  "best_epoch": 2,
+  "validation": {
+    "ndcg_at_5": 0.490125,
+    "hit_rate_at_5": 0.840832,
+    "recall_local_at_5": 0.340563,
+    "precision_at_5": 0.398737,
+    "ndcg_at_10": 0.499856,
+    "hit_rate_at_10": 0.908624,
+    "recall_local_at_10": 0.487597,
+    "precision_at_10": 0.311855,
+    "ndcg_at_20": 0.546364,
+    "hit_rate_at_20": 0.949849,
+    "recall_local_at_20": 0.644133,
+    "precision_at_20": 0.223228
+  },
+  "test": {
+    "ndcg_at_5": 0.486036,
+    "hit_rate_at_5": 0.837746,
+    "recall_local_at_5": 0.332556,
+    "precision_at_5": 0.398539,
+    "ndcg_at_10": 0.494804,
+    "hit_rate_at_10": 0.905817,
+    "recall_local_at_10": 0.479327,
+    "precision_at_10": 0.312966,
+    "ndcg_at_20": 0.540896,
+    "hit_rate_at_20": 0.948407,
+    "recall_local_at_20": 0.637341,
+    "precision_at_20": 0.22518
+  }
+}

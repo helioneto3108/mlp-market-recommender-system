@@ -1,0 +1,52 @@
+# Parâmetros do pipeline DVC (preprocess → train → evaluate).
+# Valores idênticos à run validada `mlp_temporal_v1_catfix` (experimento 5).
+
+preprocess:
+  dataset_dir: data/features/temporal_modeling_dataset_v1
+  output_dir: data/processed/preprocessing
+  target_column: target
+  embedding_columns:
+    - user_id
+    - product_id
+    - aisle_id
+    - department_id
+  numeric_feature_columns:
+    - history_order_count
+    - history_unique_products
+    - user_prior_order_count
+    - user_avg_basket_size
+    - user_avg_days_between_orders
+    - user_reorder_rate
+    - user_total_items
+    - user_has_single_prior_order
+    - user_product_purchase_count
+    - user_product_reorder_count
+    - user_product_avg_add_to_cart_order
+    - user_product_orders_since_last_purchase
+    - user_product_days_since_last_purchase
+    - user_product_was_bought_before
+    - user_product_purchase_share
+    - user_aisle_purchase_count
+    - user_department_purchase_count
+
+train:
+  model_name: mlp_temporal
+  checkpoint_path: models/mlp_temporal_v1/best_model.pt
+  history_path: reports/training_history.csv
+  batch_size: 8192
+  max_epochs: 30
+  patience: 10
+  lr_scheduler_patience: 5
+  lr_scheduler_factor: 0.5
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  embedding_dim: 32
+  hidden_dims: [128, 64]
+  dropout: 0.25
+  random_seed: 42
+  primary_k: 10
+  primary_metric: ndcg
+
+evaluate:
+  metrics_path: reports/metrics.json
+  k_values: [5, 10, 20]
