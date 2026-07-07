@@ -51,6 +51,10 @@ models/**/*.joblib
 mlruns/
 mlflow.db
 
+# Documentos de coordenação interna (entregues direto ao time, fora do repo)
+docs/handoff_docker_mlflow_gcp.md
+docs/prompt_llm_bloco_docker.md
+
 # Environment
 .env
 .env.*

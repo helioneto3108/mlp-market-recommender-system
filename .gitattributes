@@ -1,0 +1,14 @@
+# Normalização de fim de linha: LF em todas as plataformas.
+# Sem isto, o mesmo arquivo tem bytes (e md5 do DVC!) diferentes em
+# Windows (CRLF) e macOS/Linux (LF), e o `dvc status` acusa mudanças falsas.
+* text=auto eol=lf
+
+# Binários: nunca converter
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.parquet binary
+*.pt binary
+*.pkl binary
+*.joblib binary
+*.db binary
