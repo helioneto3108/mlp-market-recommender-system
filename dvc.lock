@@ -153,8 +153,8 @@ stages:
       size: 21248501
     - path: reports/training_history.csv
       hash: md5
-      md5: 0db73eb1796abd4ae79108c5d5ce9c85
-      size: 1190
+      md5: d74cafda5cce1eaa68a0eb72ac2c7729
+      size: 1177
   evaluate:
     cmd: python -m scripts.stages.evaluate
     deps:
@@ -240,5 +240,5 @@ stages:
     outs:
     - path: reports/metrics.json
       hash: md5
-      md5: 6f45d8eb95b67bd2c79edd95f2039a22
-      size: 854
+      md5: 58e9719598b6d391a4f16a2be56a7d60
+      size: 824
