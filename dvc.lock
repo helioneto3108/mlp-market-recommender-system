@@ -1,0 +1,244 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python -m scripts.stages.preprocess
+    deps:
+    - path: data/features/temporal_modeling_dataset_v1
+      hash: md5
+      md5: 0f3e051a218992ccdf587871fa284517.dir
+      size: 604676028
+      nfiles: 47
+    - path: scripts/stages/preprocess.py
+      hash: md5
+      md5: 954d29f79dc10bdd52396ca301386443
+      size: 2966
+    - path: src/features
+      hash: md5
+      md5: 82e8847c20f8a5271d598c8a27aae4c3.dir
+      size: 21043
+      nfiles: 6
+    params:
+      params.yaml:
+        preprocess:
+          dataset_dir: data/features/temporal_modeling_dataset_v1
+          output_dir: data/processed/preprocessing
+          popularity_output_dir: data/processed/popularity
+          popularity_top_n: 100
+          target_column: target
+          embedding_columns:
+          - user_id
+          - product_id
+          - aisle_id
+          - department_id
+          numeric_feature_columns:
+          - history_order_count
+          - history_unique_products
+          - user_prior_order_count
+          - user_avg_basket_size
+          - user_avg_days_between_orders
+          - user_reorder_rate
+          - user_total_items
+          - user_has_single_prior_order
+          - user_product_purchase_count
+          - user_product_reorder_count
+          - user_product_avg_add_to_cart_order
+          - user_product_orders_since_last_purchase
+          - user_product_days_since_last_purchase
+          - user_product_was_bought_before
+          - user_product_purchase_share
+          - user_aisle_purchase_count
+          - user_department_purchase_count
+    outs:
+    - path: data/processed/popularity
+      hash: md5
+      md5: 2dc0c2dd33eb1ad36fa0ab5589da3fb1.dir
+      size: 5833
+      nfiles: 1
+    - path: data/processed/preprocessing
+      hash: md5
+      md5: b5a997721f3fdd07a8a971fd2eef4bbf.dir
+      size: 3504671
+      nfiles: 3
+  train:
+    cmd: python -m scripts.stages.train
+    deps:
+    - path: data/features/temporal_modeling_dataset_v1
+      hash: md5
+      md5: 0f3e051a218992ccdf587871fa284517.dir
+      size: 604676028
+      nfiles: 47
+    - path: data/processed/preprocessing
+      hash: md5
+      md5: b5a997721f3fdd07a8a971fd2eef4bbf.dir
+      size: 3504671
+      nfiles: 3
+    - path: scripts/stages/train.py
+      hash: md5
+      md5: 8318c9eb510511751a7dc6e3eb4fc0c8
+      size: 7141
+    - path: src/data
+      hash: md5
+      md5: 5157e15289ab8fa3933e997052f709b7.dir
+      size: 13134
+      nfiles: 4
+    - path: src/evaluation
+      hash: md5
+      md5: 0b8b29045705b604cf34c1338299d412.dir
+      size: 17411
+      nfiles: 4
+    - path: src/models
+      hash: md5
+      md5: eec2329c72b9801758b90e869981e626.dir
+      size: 14254
+      nfiles: 6
+    - path: src/training
+      hash: md5
+      md5: f8acc3afc75c79cd227f6cceb1ce2f62.dir
+      size: 19226
+      nfiles: 8
+    params:
+      params.yaml:
+        preprocess:
+          dataset_dir: data/features/temporal_modeling_dataset_v1
+          output_dir: data/processed/preprocessing
+          popularity_output_dir: data/processed/popularity
+          popularity_top_n: 100
+          target_column: target
+          embedding_columns:
+          - user_id
+          - product_id
+          - aisle_id
+          - department_id
+          numeric_feature_columns:
+          - history_order_count
+          - history_unique_products
+          - user_prior_order_count
+          - user_avg_basket_size
+          - user_avg_days_between_orders
+          - user_reorder_rate
+          - user_total_items
+          - user_has_single_prior_order
+          - user_product_purchase_count
+          - user_product_reorder_count
+          - user_product_avg_add_to_cart_order
+          - user_product_orders_since_last_purchase
+          - user_product_days_since_last_purchase
+          - user_product_was_bought_before
+          - user_product_purchase_share
+          - user_aisle_purchase_count
+          - user_department_purchase_count
+        train:
+          model_name: mlp_temporal
+          checkpoint_path: models/mlp_temporal_v1/best_model.pt
+          history_path: reports/training_history.csv
+          batch_size: 8192
+          max_epochs: 30
+          patience: 10
+          lr_scheduler_patience: 5
+          lr_scheduler_factor: 0.5
+          learning_rate: 0.001
+          weight_decay: 1e-05
+          embedding_dim: 32
+          hidden_dims:
+          - 128
+          - 64
+          dropout: 0.25
+          random_seed: 42
+          primary_k: 10
+          primary_metric: ndcg
+    outs:
+    - path: models/mlp_temporal_v1/best_model.pt
+      hash: md5
+      md5: da873c45edbb514dbeb268014fc5f660
+      size: 21248501
+    - path: reports/training_history.csv
+      hash: md5
+      md5: 0db73eb1796abd4ae79108c5d5ce9c85
+      size: 1190
+  evaluate:
+    cmd: python -m scripts.stages.evaluate
+    deps:
+    - path: data/features/temporal_modeling_dataset_v1
+      hash: md5
+      md5: 0f3e051a218992ccdf587871fa284517.dir
+      size: 604676028
+      nfiles: 47
+    - path: data/processed/preprocessing
+      hash: md5
+      md5: b5a997721f3fdd07a8a971fd2eef4bbf.dir
+      size: 3504671
+      nfiles: 3
+    - path: models/mlp_temporal_v1/best_model.pt
+      hash: md5
+      md5: da873c45edbb514dbeb268014fc5f660
+      size: 21248501
+    - path: scripts/stages/evaluate.py
+      hash: md5
+      md5: 91720bdb07c6dd271b2728a6e1fe8dc7
+      size: 4227
+    - path: src/evaluation
+      hash: md5
+      md5: 0b8b29045705b604cf34c1338299d412.dir
+      size: 17411
+      nfiles: 4
+    params:
+      params.yaml:
+        evaluate:
+          metrics_path: reports/metrics.json
+          k_values:
+          - 5
+          - 10
+          - 20
+        preprocess:
+          dataset_dir: data/features/temporal_modeling_dataset_v1
+          output_dir: data/processed/preprocessing
+          popularity_output_dir: data/processed/popularity
+          popularity_top_n: 100
+          target_column: target
+          embedding_columns:
+          - user_id
+          - product_id
+          - aisle_id
+          - department_id
+          numeric_feature_columns:
+          - history_order_count
+          - history_unique_products
+          - user_prior_order_count
+          - user_avg_basket_size
+          - user_avg_days_between_orders
+          - user_reorder_rate
+          - user_total_items
+          - user_has_single_prior_order
+          - user_product_purchase_count
+          - user_product_reorder_count
+          - user_product_avg_add_to_cart_order
+          - user_product_orders_since_last_purchase
+          - user_product_days_since_last_purchase
+          - user_product_was_bought_before
+          - user_product_purchase_share
+          - user_aisle_purchase_count
+          - user_department_purchase_count
+        train:
+          model_name: mlp_temporal
+          checkpoint_path: models/mlp_temporal_v1/best_model.pt
+          history_path: reports/training_history.csv
+          batch_size: 8192
+          max_epochs: 30
+          patience: 10
+          lr_scheduler_patience: 5
+          lr_scheduler_factor: 0.5
+          learning_rate: 0.001
+          weight_decay: 1e-05
+          embedding_dim: 32
+          hidden_dims:
+          - 128
+          - 64
+          dropout: 0.25
+          random_seed: 42
+          primary_k: 10
+          primary_metric: ndcg
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 6f45d8eb95b67bd2c79edd95f2039a22
+      size: 854

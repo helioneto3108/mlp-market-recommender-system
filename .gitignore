@@ -29,16 +29,23 @@ env/
 data/raw/*.xlsx
 data/raw/*.csv
 data/processed/
-data/features/
+data/features/**/*.parquet
+data/test_sample
+data/cache
 
 # DVC
 .dvc/cache/
 .dvc/tmp/
 
+# MLflow local (server de desenvolvimento — o tracking oficial fica na nuvem)
+mlflow.db
+mlartifacts/
+mlruns/
+
 # Models (trained models are artifacts, not source code)
-models/*.pt
-models/*.pkl
-models/*.joblib
+models/**/*.pt
+models/**/*.pkl
+models/**/*.joblib
 
 # MLflow
 mlruns/

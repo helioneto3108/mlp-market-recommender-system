@@ -1,0 +1,50 @@
+# Pipeline reprodutível: preprocess → train → evaluate (dvc repro).
+# O dataset temporal (data/features/temporal_modeling_dataset_v1) é insumo
+# versionado pelo DVC (gerado pelos notebooks 01-04; determinístico).
+
+stages:
+  preprocess:
+    cmd: python -m scripts.stages.preprocess
+    deps:
+      - data/features/temporal_modeling_dataset_v1
+      - scripts/stages/preprocess.py
+      - src/features
+    params:
+      - preprocess
+    outs:
+      - data/processed/preprocessing
+      - data/processed/popularity
+
+  train:
+    cmd: python -m scripts.stages.train
+    deps:
+      - data/features/temporal_modeling_dataset_v1
+      - data/processed/preprocessing
+      - scripts/stages/train.py
+      - src/data
+      - src/models
+      - src/training
+      - src/evaluation
+    params:
+      - preprocess
+      - train
+    outs:
+      - models/mlp_temporal_v1/best_model.pt
+      - reports/training_history.csv:
+          cache: false
+
+  evaluate:
+    cmd: python -m scripts.stages.evaluate
+    deps:
+      - data/features/temporal_modeling_dataset_v1
+      - data/processed/preprocessing
+      - models/mlp_temporal_v1/best_model.pt
+      - scripts/stages/evaluate.py
+      - src/evaluation
+    params:
+      - preprocess
+      - train
+      - evaluate
+    metrics:
+      - reports/metrics.json:
+          cache: false

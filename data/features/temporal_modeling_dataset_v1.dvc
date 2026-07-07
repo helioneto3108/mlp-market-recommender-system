@@ -1,0 +1,6 @@
+outs:
+- md5: 0f3e051a218992ccdf587871fa284517.dir
+  size: 604676028
+  nfiles: 47
+  hash: md5
+  path: temporal_modeling_dataset_v1
