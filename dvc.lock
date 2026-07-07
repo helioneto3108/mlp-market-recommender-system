@@ -14,9 +14,9 @@ stages:
       size: 2966
     - path: src/features
       hash: md5
-      md5: 82e8847c20f8a5271d598c8a27aae4c3.dir
-      size: 21043
-      nfiles: 6
+      md5: 6a59569703d14d6206bb33e7f16afd04.dir
+      size: 8840
+      nfiles: 3
     params:
       params.yaml:
         preprocess:
@@ -78,24 +78,24 @@ stages:
       size: 7141
     - path: src/data
       hash: md5
-      md5: 5157e15289ab8fa3933e997052f709b7.dir
-      size: 13134
-      nfiles: 4
+      md5: 8320885ee91b67ad44bd37f9e9be50ea.dir
+      size: 5523
+      nfiles: 2
     - path: src/evaluation
       hash: md5
-      md5: 0b8b29045705b604cf34c1338299d412.dir
-      size: 17411
-      nfiles: 4
+      md5: ce4bbdd8aacb4dc70ef95dd4f171d571.dir
+      size: 7283
+      nfiles: 2
     - path: src/models
       hash: md5
-      md5: eec2329c72b9801758b90e869981e626.dir
-      size: 14254
-      nfiles: 6
+      md5: 9275c92697489b2b6252945af8ee8d6b.dir
+      size: 6062
+      nfiles: 3
     - path: src/training
       hash: md5
-      md5: f8acc3afc75c79cd227f6cceb1ce2f62.dir
-      size: 19226
-      nfiles: 8
+      md5: e2bde90fbb92b87f027dc03c99044dc5.dir
+      size: 7682
+      nfiles: 4
     params:
       params.yaml:
         preprocess:
@@ -178,9 +178,9 @@ stages:
       size: 4227
     - path: src/evaluation
       hash: md5
-      md5: 0b8b29045705b604cf34c1338299d412.dir
-      size: 17411
-      nfiles: 4
+      md5: ce4bbdd8aacb4dc70ef95dd4f171d571.dir
+      size: 7283
+      nfiles: 2
     params:
       params.yaml:
         evaluate:

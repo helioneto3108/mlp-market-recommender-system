@@ -6,3 +6,12 @@
 .DS_Store
 
 .gitkeep
+
+# Caches do Python — binários específicos de cada máquina; sem estas linhas,
+# o DVC os inclui no hash dos diretórios de src/ e o `dvc status` acusa
+# mudanças falsas em qualquer outra máquina.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
