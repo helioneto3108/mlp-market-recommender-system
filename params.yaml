@@ -4,6 +4,8 @@
 preprocess:
   dataset_dir: data/features/temporal_modeling_dataset_v1
   output_dir: data/processed/preprocessing
+  popularity_output_dir: data/processed/popularity
+  popularity_top_n: 100
   target_column: target
   embedding_columns:
     - user_id

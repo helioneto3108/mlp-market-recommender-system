@@ -13,6 +13,7 @@ stages:
       - preprocess
     outs:
       - data/processed/preprocessing
+      - data/processed/popularity
 
   train:
     cmd: python -m scripts.stages.train

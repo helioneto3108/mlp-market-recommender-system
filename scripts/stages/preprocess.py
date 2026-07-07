@@ -14,7 +14,9 @@ import yaml
 from src.features import (
     build_category_maps,
     compute_numeric_scaler_stats,
+    compute_popularity_ranking,
     save_category_maps,
+    save_popularity_ranking,
 )
 
 
@@ -57,6 +59,13 @@ def main() -> None:
     (output_dir / "train_stats.json").write_text(
         json.dumps(train_stats, indent=2), encoding="utf-8"
     )
+
+    # Vitrine de popularidade — fallback de cold start (usuários sem histórico).
+    popularity_dir = Path(params["popularity_output_dir"])
+    popularity_dir.mkdir(parents=True, exist_ok=True)
+    ranking = compute_popularity_ranking(part_paths, params["popularity_top_n"])
+    save_popularity_ranking(ranking, popularity_dir / "top_products.json")
+    print(f"popularidade: top-{len(ranking)} produtos salvos em {popularity_dir}")
 
     cardinalities = {
         column: len(mapping) + 1 for column, mapping in category_maps.items()

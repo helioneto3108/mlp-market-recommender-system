@@ -10,18 +10,20 @@ stages:
       nfiles: 47
     - path: scripts/stages/preprocess.py
       hash: md5
-      md5: 265a2ffd5bb390bb2fcd0266893c8283
-      size: 2467
+      md5: 954d29f79dc10bdd52396ca301386443
+      size: 2966
     - path: src/features
       hash: md5
-      md5: 9545104929202ba23540404a1ad40695.dir
-      size: 14567
-      nfiles: 4
+      md5: 82e8847c20f8a5271d598c8a27aae4c3.dir
+      size: 21043
+      nfiles: 6
     params:
       params.yaml:
         preprocess:
           dataset_dir: data/features/temporal_modeling_dataset_v1
           output_dir: data/processed/preprocessing
+          popularity_output_dir: data/processed/popularity
+          popularity_top_n: 100
           target_column: target
           embedding_columns:
           - user_id
@@ -47,6 +49,11 @@ stages:
           - user_aisle_purchase_count
           - user_department_purchase_count
     outs:
+    - path: data/processed/popularity
+      hash: md5
+      md5: 2dc0c2dd33eb1ad36fa0ab5589da3fb1.dir
+      size: 5833
+      nfiles: 1
     - path: data/processed/preprocessing
       hash: md5
       md5: b5a997721f3fdd07a8a971fd2eef4bbf.dir
@@ -94,6 +101,8 @@ stages:
         preprocess:
           dataset_dir: data/features/temporal_modeling_dataset_v1
           output_dir: data/processed/preprocessing
+          popularity_output_dir: data/processed/popularity
+          popularity_top_n: 100
           target_column: target
           embedding_columns:
           - user_id
@@ -144,8 +153,8 @@ stages:
       size: 21248501
     - path: reports/training_history.csv
       hash: md5
-      md5: 663220aa726c6a073e93d934827dd6b1
-      size: 1193
+      md5: 0db73eb1796abd4ae79108c5d5ce9c85
+      size: 1190
   evaluate:
     cmd: python -m scripts.stages.evaluate
     deps:
@@ -183,6 +192,8 @@ stages:
         preprocess:
           dataset_dir: data/features/temporal_modeling_dataset_v1
           output_dir: data/processed/preprocessing
+          popularity_output_dir: data/processed/popularity
+          popularity_top_n: 100
           target_column: target
           embedding_columns:
           - user_id
