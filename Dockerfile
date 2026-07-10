@@ -22,17 +22,21 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH="/app/.venv/bin:$PATH"
 
-RUN groupadd --system app && useradd --system --gid app app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system app \
+    && useradd --system --gid app app \
+    && mkdir -p /app \
+    && chown app:app /app
 
-COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder --chown=app:app /app/.venv /app/.venv
 
-COPY src/ ./src/
-COPY scripts/ ./scripts/
-COPY params.yaml dvc.yaml ./
-COPY .dvc/config ./.dvc/config
-COPY .dvcignore ./.dvcignore
-
-RUN chown -R app:app /app
+COPY --chown=app:app src/ ./src/
+COPY --chown=app:app scripts/ ./scripts/
+COPY --chown=app:app params.yaml dvc.yaml dvc.lock ./
+COPY --chown=app:app .dvc/config ./.dvc/config
+COPY --chown=app:app .dvcignore ./.dvcignore
 
 USER app
 
