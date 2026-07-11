@@ -25,6 +25,10 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
+# Frontend (dependências instaladas via npm install)
+node_modules/
+frontend/dist/
+
 # Data (raw data should not be committed)
 data/raw/*.xlsx
 data/raw/*.csv
