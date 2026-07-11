@@ -31,9 +31,15 @@ experimentos rastreados no **MLflow** (Model Registry com modelo em
 
 ### MLflow na nuvem (Cloud Run)
 
-<!-- TODO(feat/docker-mlflow): adicionar URL pública do MLflow após a Entrega C -->
-🚧 *Em desenvolvimento na branch `feat/docker-mlflow` — a URL pública com as
-runs e o Model Registry será adicionada aqui.*
+**https://mlflow-66vp6r5t4q-uc.a.run.app**
+
+Servidor de tracking público do projeto: a aba **Experiments** tem as runs do
+pipeline (parâmetros, métricas por split/k e artefatos) e a aba **Models** tem
+o `mlp-temporal-recommender` com os aliases `@staging` e `@production`.
+
+> O serviço escala a zero quando ocioso — o primeiro acesso pode levar
+> ~15–30 s (cold start). Backend SQLite em GCS via volume FUSE e artefatos no
+> bucket do projeto.
 
 ---
 
@@ -88,8 +94,8 @@ vazamento de futuro para o passado.
 
 - **[uv](https://docs.astral.sh/uv/getting-started/installation/)** — gerenciador
   de pacotes e ambientes Python (resolve as versões exatas do `uv.lock`).
-- **[Google Cloud SDK](https://cloud.google.com/sdk/docs/install)** — apenas
-  para baixar os dados versionados (`dvc pull`) do bucket GCS do projeto.
+  É o único pré-requisito para reproduzir o projeto — o download dos dados
+  (`dvc pull`) não exige conta GCP.
 
 ```bash
 # macOS/Linux
@@ -103,15 +109,18 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 ## Dataset
 
 Os dados brutos e o dataset temporal de modelagem **não estão no git** — são
-versionados pelo **DVC** com remote no Google Cloud Storage
-(`gs://mlp-market-recommender-gp16`). Com acesso ao bucket:
+versionados pelo **DVC** com remote no Google Cloud Storage. O remote é
+**público para leitura** (o dataset Instacart é aberto), então baixar os dados
+não exige conta GCP nem autenticação:
 
 ```bash
-gcloud auth application-default login   # uma vez por máquina
-uv run dvc pull                         # baixa dados brutos + dataset temporal (~1,3 GB)
+uv run dvc pull    # baixa dados brutos + dataset temporal (~1,3 GB), sem login
 ```
 
-Sem acesso ao bucket, baixe os CSVs originais no
+> Escrever no remote (`dvc push`) continua restrito ao time, via
+> `gcloud auth application-default login`.
+
+Alternativa sem DVC: baixe os CSVs originais no
 [Kaggle](https://www.kaggle.com/competitions/instacart-market-basket-analysis/data),
 extraia-os em `data/raw/` e execute os notebooks `01`–`04` para regenerar o
 dataset temporal (a geração é determinística).
@@ -172,10 +181,28 @@ trocar entre servidor local, docker-compose e Cloud Run é só editar o `.env`.
 
 ## Docker
 
-<!-- TODO(feat/docker-mlflow): documentar docker build / docker compose up após as Entregas A e B -->
-🚧 *Em desenvolvimento na branch `feat/docker-mlflow`: `Dockerfile`
-multi-stage, `docker-compose.yml` (MLflow server + treino) e deploy do MLflow
-no Cloud Run. As instruções serão adicionadas aqui.*
+Imagem **multi-stage** (builder instala as deps com `uv sync --frozen`;
+runtime leva só o `.venv` e o código, com usuário não-root) e compose com dois
+serviços — o MLflow server e o pipeline de treino:
+
+```bash
+# Build da imagem (torch resolve do índice CPU no Linux — imagem enxuta)
+docker build -t mlp-recommender .
+
+# Sobe o MLflow server com persistência (volume nomeado)
+docker compose up mlflow -d          # UI em http://localhost:5000
+
+# Roda o pipeline completo no container, logando no MLflow do compose
+docker compose run train
+```
+
+Dentro da rede do compose, o serviço de treino alcança o MLflow pelo hostname
+interno `mlflow` (`MLFLOW_TRACKING_URI=http://mlflow:5000`) — a mesma imagem e
+o mesmo código logam no Cloud Run em produção trocando apenas o `.env`.
+
+A imagem publicada no Artifact Registry
+(`us-central1-docker.pkg.dev/mlp-market-recommender-gp16/mlp-recommender`) é a
+que roda o MLflow no Cloud Run.
 
 ---
 
@@ -194,6 +221,9 @@ mlp-market-recommender-system/
 │   ├── stages/          # Entrypoints do DVC: preprocess · train · evaluate
 │   ├── predict.py       # CLI de inferência: top-K por usuário
 │   └── register_model.py# Registro e promoção no MLflow Registry
+├── api/                 # API FastAPI de recomendação (demo)
+├── services/            # Serviços de domínio consumidos pela API
+├── frontend/            # Dashboard React (demo com dados mockados)
 ├── notebooks/           # 01 dataset · 02 EDA · 03 candidatos · 04 features
 │                        # 05 baselines · 06 experimentos · 07 registry
 ├── data/                # Versionado por DVC (raw + features), fora do git
@@ -246,8 +276,8 @@ mlp-market-recommender-system/
 
 **Etapa 3 — Containerização e Versionamento**
 - [x] DVC: dataset versionado no GCS + pipeline de 3 stages (`dvc repro`)
-- [ ] Dockerfile multi-stage + docker-compose (MLflow server + treino) — *em andamento*
-- [ ] MLflow no Cloud Run (URL pública) — *em andamento*
+- [x] Dockerfile multi-stage + docker-compose (MLflow server + treino)
+- [x] MLflow no Cloud Run (URL pública) — bônus de deploy em nuvem
 
 **Etapa 4 — Rede Neural, Registry e Entrega**
 - [x] MLP com embeddings + early stopping, superando 4 baselines em 4+ métricas
