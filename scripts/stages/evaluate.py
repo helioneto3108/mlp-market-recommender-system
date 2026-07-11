@@ -7,9 +7,11 @@ show`), com NDCG, hit rate, recall local e precision por split e por k.
 import json
 from pathlib import Path
 
+import mlflow
 import torch
 import yaml
 
+from src.config import get_settings
 from src.data import TemporalParquetDataset
 from src.evaluation import evaluate_ranking_scores
 from src.features import load_category_maps
@@ -66,6 +68,39 @@ def metrics_as_dict(metrics_frame) -> dict:
             flat[f"{metric}_at_{k}"] = round(float(row[metric]), 6)
     return flat
 
+def flatten_results(results: dict) -> dict[str, float]:
+    """Achata métricas por split para o formato aceito pelo MLflow."""
+    flat = {"best_epoch": float(results["best_epoch"])}
+    for split in ("validation", "test"):
+        for metric_name, value in results[split].items():
+            flat[f"{split}_{metric_name}"] = float(value)
+    return flat
+
+
+def log_evaluation_run(
+    train_params: dict,
+    evaluate_params: dict,
+    metrics_path: Path,
+    results: dict,
+) -> None:
+    """Registra métricas finais e artefatos do stage de avaliação no MLflow."""
+    settings = get_settings()
+    if not settings.mlflow_tracking_uri:
+        print("MLFLOW_TRACKING_URI não configurado; logging MLflow pulado.")
+        return
+
+    mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
+    mlflow.set_experiment(settings.mlflow_experiment_name)
+
+    with mlflow.start_run(run_name="evaluate_mlp_temporal"):
+        mlflow.log_params({f"train_{key}": value for key, value in train_params.items()})
+        mlflow.log_param("evaluate_k_values", evaluate_params["k_values"])
+        for metric_name, value in flatten_results(results).items():
+            mlflow.log_metric(metric_name, value)
+        mlflow.log_artifact(str(metrics_path), "evaluation")
+        history_path = Path(train_params["history_path"])
+        if history_path.exists():
+            mlflow.log_artifact(str(history_path), "training")
 
 def main() -> None:
     """Executa o stage de avaliação."""
@@ -106,6 +141,8 @@ def main() -> None:
     metrics_path.parent.mkdir(parents=True, exist_ok=True)
     metrics_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(f"métricas salvas em {metrics_path}")
+
+    log_evaluation_run(train_params, evaluate_params, metrics_path, results)
 
 
 if __name__ == "__main__":

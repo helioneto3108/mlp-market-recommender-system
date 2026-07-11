@@ -9,11 +9,13 @@ import json
 import time
 from pathlib import Path
 
+import mlflow
 import pandas as pd
 import torch
 import yaml
 from torch import nn
 
+from src.config import get_settings
 from src.data import TemporalParquetDataset
 from src.evaluation import evaluate_ranking_scores
 from src.features import load_category_maps
@@ -84,6 +86,39 @@ def validation_metric(
     metrics = evaluate_ranking_scores(predictions, k_values=[train_params["primary_k"]])
     return float(metrics.iloc[0][train_params["primary_metric"]])
 
+def mlflow_enabled() -> bool:
+    """Indica se o tracking MLflow deve ser executado neste ambiente."""
+    settings = get_settings()
+    return bool(settings.mlflow_tracking_uri)
+
+
+def log_training_run(
+    preprocess_params: dict,
+    train_params: dict,
+    history_path: Path,
+    best_epoch: int,
+    best_metric: float,
+) -> None:
+    """Registra parâmetros, métricas e histórico do stage de treino no MLflow."""
+    settings = get_settings()
+    if not mlflow_enabled():
+        print("MLFLOW_TRACKING_URI não configurado; logging MLflow pulado.")
+        return
+
+    mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
+    mlflow.set_experiment(settings.mlflow_experiment_name)
+
+    with mlflow.start_run(run_name="train_mlp_temporal"):
+        mlflow.log_params({f"train_{key}": value for key, value in train_params.items()})
+        mlflow.log_param("preprocess_dataset_dir", preprocess_params["dataset_dir"])
+        mlflow.log_param("preprocess_target_column", preprocess_params["target_column"])
+        mlflow.log_param(
+            "preprocess_numeric_feature_count",
+            len(preprocess_params["numeric_feature_columns"]),
+        )
+        mlflow.log_metric("best_epoch", best_epoch)
+        mlflow.log_metric("best_validation_metric", best_metric)
+        mlflow.log_artifact(str(history_path), "training")
 
 def main() -> None:
     """Executa o stage de treino."""
@@ -188,6 +223,14 @@ def main() -> None:
     print(
         f"melhor época: {early_stopping.best_epoch} | métrica: {early_stopping.best_value:.6f}"
     )
+
+    log_training_run(
+    preprocess_params,
+    train_params,
+    history_path,
+    int(early_stopping.best_epoch),
+    float(early_stopping.best_value),
+)
 
 
 if __name__ == "__main__":

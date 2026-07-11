@@ -1,0 +1,35 @@
+# Ambientes virtuais e caches Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Git e DVC cache local
+.git/
+.gitignore
+.dvc/cache/
+
+# Dados e artefatos pesados
+data/
+models/
+reports/
+mlruns/
+mlflow.db
+
+# Notebooks e arquivos locais
+notebooks/
+.env
+*.log
+
+# Frontend/serviços locais, se existirem
+node_modules/
+frontend_v2/
+barcode-recommender/
+services/
+
+# Sistema operacional / editor
+.DS_Store
+.vscode/
+.idea/
