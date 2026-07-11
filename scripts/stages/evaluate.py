@@ -68,6 +68,7 @@ def metrics_as_dict(metrics_frame) -> dict:
             flat[f"{metric}_at_{k}"] = round(float(row[metric]), 6)
     return flat
 
+
 def flatten_results(results: dict) -> dict[str, float]:
     """Achata métricas por split para o formato aceito pelo MLflow."""
     flat = {"best_epoch": float(results["best_epoch"])}
@@ -93,7 +94,9 @@ def log_evaluation_run(
     mlflow.set_experiment(settings.mlflow_experiment_name)
 
     with mlflow.start_run(run_name="evaluate_mlp_temporal"):
-        mlflow.log_params({f"train_{key}": value for key, value in train_params.items()})
+        mlflow.log_params(
+            {f"train_{key}": value for key, value in train_params.items()}
+        )
         mlflow.log_param("evaluate_k_values", evaluate_params["k_values"])
         for metric_name, value in flatten_results(results).items():
             mlflow.log_metric(metric_name, value)
@@ -101,6 +104,7 @@ def log_evaluation_run(
         history_path = Path(train_params["history_path"])
         if history_path.exists():
             mlflow.log_artifact(str(history_path), "training")
+
 
 def main() -> None:
     """Executa o stage de avaliação."""

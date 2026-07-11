@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from services.user_service import UserService
 
 app = FastAPI(
@@ -37,8 +36,10 @@ def health_check() -> dict:
 def get_user(user_id: int) -> dict:
     return user_service.get_user(user_id)
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "api.app_user:app",
         host="127.0.0.1",

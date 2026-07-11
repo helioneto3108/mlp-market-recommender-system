@@ -86,6 +86,7 @@ def validation_metric(
     metrics = evaluate_ranking_scores(predictions, k_values=[train_params["primary_k"]])
     return float(metrics.iloc[0][train_params["primary_metric"]])
 
+
 def mlflow_enabled() -> bool:
     """Indica se o tracking MLflow deve ser executado neste ambiente."""
     settings = get_settings()
@@ -109,7 +110,9 @@ def log_training_run(
     mlflow.set_experiment(settings.mlflow_experiment_name)
 
     with mlflow.start_run(run_name="train_mlp_temporal"):
-        mlflow.log_params({f"train_{key}": value for key, value in train_params.items()})
+        mlflow.log_params(
+            {f"train_{key}": value for key, value in train_params.items()}
+        )
         mlflow.log_param("preprocess_dataset_dir", preprocess_params["dataset_dir"])
         mlflow.log_param("preprocess_target_column", preprocess_params["target_column"])
         mlflow.log_param(
@@ -119,6 +122,7 @@ def log_training_run(
         mlflow.log_metric("best_epoch", best_epoch)
         mlflow.log_metric("best_validation_metric", best_metric)
         mlflow.log_artifact(str(history_path), "training")
+
 
 def main() -> None:
     """Executa o stage de treino."""
@@ -225,12 +229,12 @@ def main() -> None:
     )
 
     log_training_run(
-    preprocess_params,
-    train_params,
-    history_path,
-    int(early_stopping.best_epoch),
-    float(early_stopping.best_value),
-)
+        preprocess_params,
+        train_params,
+        history_path,
+        int(early_stopping.best_epoch),
+        float(early_stopping.best_value),
+    )
 
 
 if __name__ == "__main__":

@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
 from services.recommendation_service import RecommendationService
-
 
 app = FastAPI(
     title="Market Recommender API",

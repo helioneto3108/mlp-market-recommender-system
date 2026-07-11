@@ -11,7 +11,9 @@ class UserService:
     def __init__(self) -> None:
         root_path = Path(__file__).resolve().parents[1]
 
-        self.dataset_path = root_path / "data" / "features" / "temporal_modeling_dataset_v1"
+        self.dataset_path = (
+            root_path / "data" / "features" / "temporal_modeling_dataset_v1"
+        )
         self.products_path = root_path / "data" / "raw" / "products.csv"
 
         if not self.dataset_path.exists():
@@ -27,9 +29,7 @@ class UserService:
             )
 
         self.dataset = ds.dataset(self.dataset_path, format="parquet")
-        self.products = pd.read_csv(self.products_path)[
-            ["product_id", "product_name"]
-        ]
+        self.products = pd.read_csv(self.products_path)[["product_id", "product_name"]]
 
     def get_user(self, user_id: int) -> dict:
         """Return user information."""
@@ -95,12 +95,8 @@ class UserService:
             {
                 "product_id": int(row["product_id"]),
                 "product_name": str(row["product_name"]),
-                "user_product_purchase_count": int(
-                    row["user_product_purchase_count"]
-                ),
-                "user_product_reorder_rate": float(
-                    row["user_product_reorder_rate"]
-                ),
+                "user_product_purchase_count": int(row["user_product_purchase_count"]),
+                "user_product_reorder_rate": float(row["user_product_reorder_rate"]),
             }
             for _, row in products.iterrows()
         ]
