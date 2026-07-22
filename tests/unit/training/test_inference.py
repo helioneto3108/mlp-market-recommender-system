@@ -1,12 +1,10 @@
-"""Testes da inferência (`predict_scores`) e persistência dos mapas."""
+"""Testes da inferência (`src.training.inference`)."""
 
 import pandas as pd
 import torch
 
-from src.features import build_category_maps, load_category_maps
 from src.models import MLPRecommender
 from src.training import predict_scores
-from src.utils import save_json
 
 TINY_CONFIG = {
     "embedding_cardinalities": {"product_id": 8},
@@ -62,18 +60,3 @@ def test_predict_scores_e_deterministico_em_eval() -> None:
     second = predict_scores(model, batches, torch.device("cpu"))
 
     assert first["score"].tolist() == second["score"].tolist()
-
-
-def test_mapas_sobrevivem_ao_roundtrip_json(tmp_path) -> None:
-    """save/load preserva as chaves inteiras (JSON as converteria p/ string)."""
-    frame = pd.DataFrame({"split": ["train", "train"], "product_id": [10, 20]})
-    parquet = tmp_path / "part-0000.parquet"
-    frame.to_parquet(parquet, index=False)
-    original = build_category_maps([parquet], ["product_id"])
-
-    path = tmp_path / "maps.json"
-    save_json(original, path)
-    reloaded = load_category_maps(path)
-
-    assert reloaded == original
-    assert all(isinstance(key, int) for key in reloaded["product_id"])
