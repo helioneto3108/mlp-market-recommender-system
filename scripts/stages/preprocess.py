@@ -4,7 +4,6 @@ Todos os artefatos são ajustados exclusivamente no split de treino
 (anti-leakage) e salvos em JSON para consumo dos stages `train` e `evaluate`.
 """
 
-import json
 import time
 from pathlib import Path
 
@@ -15,9 +14,9 @@ from src.features import (
     build_category_maps,
     compute_numeric_scaler_stats,
     compute_popularity_ranking,
-    save_category_maps,
     save_popularity_ranking,
 )
+from src.utils import save_json
 
 
 def compute_train_class_stats(part_paths: list[Path], target_column: str) -> dict:
@@ -46,19 +45,15 @@ def main() -> None:
 
     start = time.time()
     category_maps = build_category_maps(part_paths, params["embedding_columns"])
-    save_category_maps(category_maps, output_dir / "category_maps.json")
+    save_json(category_maps, output_dir / "category_maps.json")
 
     scaler_stats = compute_numeric_scaler_stats(
         part_paths, params["numeric_feature_columns"]
     )
-    (output_dir / "scaler_stats.json").write_text(
-        json.dumps(scaler_stats, indent=2), encoding="utf-8"
-    )
+    save_json(scaler_stats, output_dir / "scaler_stats.json")
 
     train_stats = compute_train_class_stats(part_paths, params["target_column"])
-    (output_dir / "train_stats.json").write_text(
-        json.dumps(train_stats, indent=2), encoding="utf-8"
-    )
+    save_json(train_stats, output_dir / "train_stats.json")
 
     # Vitrine de popularidade — fallback de cold start (usuários sem histórico).
     popularity_dir = Path(params["popularity_output_dir"])

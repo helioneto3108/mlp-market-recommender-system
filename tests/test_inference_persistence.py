@@ -3,9 +3,10 @@
 import pandas as pd
 import torch
 
-from src.features import build_category_maps, load_category_maps, save_category_maps
+from src.features import build_category_maps, load_category_maps
 from src.models import MLPRecommender
 from src.training import predict_scores
+from src.utils import save_json
 
 TINY_CONFIG = {
     "embedding_cardinalities": {"product_id": 8},
@@ -71,7 +72,7 @@ def test_mapas_sobrevivem_ao_roundtrip_json(tmp_path) -> None:
     original = build_category_maps([parquet], ["product_id"])
 
     path = tmp_path / "maps.json"
-    save_category_maps(original, path)
+    save_json(original, path)
     reloaded = load_category_maps(path)
 
     assert reloaded == original

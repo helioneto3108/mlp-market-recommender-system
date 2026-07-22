@@ -10,7 +10,6 @@ from src.features.preprocessing import (
     compute_numeric_scaler_stats,
     load_category_maps,
     map_categorical_columns,
-    save_category_maps,
     scale_numeric_columns,
 )
 
@@ -21,7 +20,6 @@ __all__ = [
     "load_category_maps",
     "load_popularity_ranking",
     "map_categorical_columns",
-    "save_category_maps",
     "save_popularity_ranking",
     "scale_numeric_columns",
 ]

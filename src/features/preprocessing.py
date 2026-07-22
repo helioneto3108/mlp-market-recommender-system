@@ -43,13 +43,16 @@ def build_category_maps(
     category_values: dict[str, set[int]] = {
         column: set() for column in categorical_columns
     }
+
     for part_path in part_paths:
         part_df = pd.read_parquet(part_path, columns=["split", *categorical_columns])
         train_df = part_df[part_df["split"] == "train"]
+
         for column in categorical_columns:
             category_values[column].update(
                 train_df[column].dropna().astype(int).unique().tolist()
             )
+
     return {
         column: {value: index for index, value in enumerate(sorted(values), start=1)}
         for column, values in category_values.items()
@@ -71,18 +74,23 @@ def compute_numeric_scaler_stats(
     Returns:
         ``{"mean": {coluna: média}, "std": {coluna: desvio}}``.
     """
+
     sums = pd.Series(0.0, index=numeric_columns)
     squared_sums = pd.Series(0.0, index=numeric_columns)
     count = 0
+
     for part_path in part_paths:
         part_df = pd.read_parquet(part_path, columns=["split", *numeric_columns])
-        train_df = part_df[part_df["split"] == "train"][numeric_columns].fillna(0)
+        train_df = part_df[part_df["split"] == "train"][numeric_columns]
+
         sums += train_df.sum()
         squared_sums += (train_df**2).sum()
         count += len(train_df)
+
     means = sums / count
     variances = (squared_sums / count) - (means**2)
     stds = np.sqrt(variances.clip(lower=0)).replace(0, 1)
+
     return {"mean": means.to_dict(), "std": stds.to_dict()}
 
 
@@ -100,10 +108,12 @@ def map_categorical_columns(
         DataFrame só com as colunas mapeadas, em ``int64``.
     """
     mapped_df = pd.DataFrame(index=df.index)
+
     for column in categorical_columns:
         mapped_df[column] = (
             df[column].map(category_maps[column]).fillna(UNK_INDEX).astype("int64")
         )
+
     return mapped_df
 
 
@@ -122,20 +132,11 @@ def scale_numeric_columns(
     Returns:
         DataFrame padronizado (z-score) em ``float32``.
     """
-    numeric_df = df[numeric_columns].fillna(0).astype("float32")
+    numeric_df = df[numeric_columns].astype("float32")
     means = pd.Series(scaler_stats["mean"])
     stds = pd.Series(scaler_stats["std"])
+
     return ((numeric_df - means) / stds).astype("float32")
-
-
-def save_category_maps(category_maps: CategoryMaps, path: Path) -> None:
-    """Persiste os mapas categóricos em JSON.
-
-    Args:
-        category_maps: Mapas construídos por :func:`build_category_maps`.
-        path: Destino do arquivo JSON.
-    """
-    path.write_text(json.dumps(category_maps, indent=2), encoding="utf-8")
 
 
 def load_category_maps(path: Path) -> CategoryMaps:
@@ -146,12 +147,13 @@ def load_category_maps(path: Path) -> CategoryMaps:
     virariam UNK silenciosamente.
 
     Args:
-        path: Arquivo JSON salvo por :func:`save_category_maps`.
+        path: Arquivo JSON contendo os mapas categóricos.
 
     Returns:
         Mapas com chaves ``int``, idênticos aos originais.
     """
     raw = json.loads(path.read_text(encoding="utf-8"))
+
     return {
         column: {int(value): index for value, index in mapping.items()}
         for column, mapping in raw.items()
