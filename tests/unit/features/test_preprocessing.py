@@ -38,6 +38,7 @@ def test_scaler_calculado_so_no_treino(part_paths) -> None:
     stats = compute_numeric_scaler_stats(part_paths, ["f1", "f2"])
 
     train_f1 = np.array([1.0, 3.0, 5.0])  # linhas de treino das 2 partições
+
     assert stats["mean"]["f1"] == pytest.approx(train_f1.mean())
     assert stats["std"]["f1"] == pytest.approx(train_f1.std())
     assert stats["std"]["f2"] == 1.0  # f2 é constante no treino → evita divisão por 0

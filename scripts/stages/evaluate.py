@@ -4,7 +4,6 @@ Gera `reports/metrics.json` no formato de métricas do DVC (`dvc metrics
 show`), com NDCG, hit rate, recall local e precision por split e por k.
 """
 
-import json
 from pathlib import Path
 
 import mlflow
@@ -17,6 +16,7 @@ from src.evaluation import evaluate_ranking_scores
 from src.features import load_category_maps
 from src.models import build_model
 from src.training import get_device, predict_scores, seed_everything
+from src.utils import load_json, save_json
 
 EVALUATION_METADATA = ("user_window_id", "product_id", "target")
 
@@ -49,9 +49,7 @@ def build_split_dataset(
         embedding_columns=embedding_columns,
         numeric_columns=numeric_columns,
         category_maps=load_category_maps(preprocessing_dir / "category_maps.json"),
-        scaler_stats=json.loads(
-            (preprocessing_dir / "scaler_stats.json").read_text(encoding="utf-8")
-        ),
+        scaler_stats=load_json(preprocessing_dir / "scaler_stats.json"),
         batch_size=train_params["batch_size"],
         target_column=preprocess_params["target_column"],
         include_metadata=True,
@@ -143,7 +141,7 @@ def main() -> None:
 
     metrics_path = Path(evaluate_params["metrics_path"])
     metrics_path.parent.mkdir(parents=True, exist_ok=True)
-    metrics_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    save_json(results, metrics_path)
     print(f"métricas salvas em {metrics_path}")
 
     log_evaluation_run(train_params, evaluate_params, metrics_path, results)

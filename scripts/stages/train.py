@@ -5,7 +5,6 @@ ReduceLROnPlateau monitorando NDCG@k na validação, early stopping com
 melhora estrita, checkpoint da melhor época no formato dos notebooks.
 """
 
-import json
 import time
 from pathlib import Path
 
@@ -28,6 +27,7 @@ from src.training import (
     seed_everything,
     train_one_epoch,
 )
+from src.utils import load_json
 
 EVALUATION_METADATA = ("user_window_id", "product_id", "target")
 
@@ -133,12 +133,8 @@ def main() -> None:
 
     preprocessing_dir = Path(preprocess_params["output_dir"])
     category_maps = load_category_maps(preprocessing_dir / "category_maps.json")
-    scaler_stats = json.loads(
-        (preprocessing_dir / "scaler_stats.json").read_text(encoding="utf-8")
-    )
-    train_stats = json.loads(
-        (preprocessing_dir / "train_stats.json").read_text(encoding="utf-8")
-    )
+    scaler_stats = load_json(preprocessing_dir / "scaler_stats.json")
+    train_stats = load_json(preprocessing_dir / "train_stats.json")
 
     train_dataset, validation_dataset = build_datasets(
         preprocess_params, train_params, category_maps, scaler_stats

@@ -7,7 +7,6 @@ comprados pelo maior número de usuários distintos, contados apenas no
 split de treino (mesma disciplina anti-leakage do restante do pipeline).
 """
 
-import json
 from collections.abc import Iterable
 from pathlib import Path
 
@@ -51,17 +50,8 @@ def compute_popularity_ranking(
         )
         .head(top_n)
     )
+
     return [
         {"product_id": int(row.product_id), "n_users": int(row.n_users)}
         for row in ranking.itertuples()
     ]
-
-
-def save_popularity_ranking(ranking: PopularityRanking, path: Path) -> None:
-    """Persiste o ranking de popularidade em JSON."""
-    path.write_text(json.dumps(ranking, indent=2), encoding="utf-8")
-
-
-def load_popularity_ranking(path: Path) -> PopularityRanking:
-    """Carrega o ranking de popularidade salvo pelo stage de pré-processamento."""
-    return json.loads(path.read_text(encoding="utf-8"))

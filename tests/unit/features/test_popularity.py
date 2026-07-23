@@ -2,11 +2,7 @@
 
 import pandas as pd
 
-from src.features import (
-    compute_popularity_ranking,
-    load_popularity_ranking,
-    save_popularity_ranking,
-)
+from src.features import compute_popularity_ranking
 
 
 def build_partition(tmp_path, name: str, rows: list[tuple]) -> object:
@@ -66,13 +62,3 @@ def test_empate_desempata_por_product_id(tmp_path) -> None:
     ranking = compute_popularity_ranking([path], top_n=2)
 
     assert [item["product_id"] for item in ranking] == [20, 55]  # empate → menor ID
-
-
-def test_roundtrip_json(tmp_path) -> None:
-    """Salvar e carregar o ranking preserva conteúdo e ordem."""
-    ranking = [{"product_id": 50, "n_users": 2}, {"product_id": 60, "n_users": 1}]
-    path = tmp_path / "top_products.json"
-
-    save_popularity_ranking(ranking, path)
-
-    assert load_popularity_ranking(path) == ranking

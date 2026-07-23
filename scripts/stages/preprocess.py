@@ -14,7 +14,6 @@ from src.features import (
     build_category_maps,
     compute_numeric_scaler_stats,
     compute_popularity_ranking,
-    save_popularity_ranking,
 )
 from src.utils import save_json
 
@@ -59,7 +58,7 @@ def main() -> None:
     popularity_dir = Path(params["popularity_output_dir"])
     popularity_dir.mkdir(parents=True, exist_ok=True)
     ranking = compute_popularity_ranking(part_paths, params["popularity_top_n"])
-    save_popularity_ranking(ranking, popularity_dir / "top_products.json")
+    save_json(ranking, popularity_dir / "top_products.json")
     print(f"popularidade: top-{len(ranking)} produtos salvos em {popularity_dir}")
 
     cardinalities = {

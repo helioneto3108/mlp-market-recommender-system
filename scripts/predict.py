@@ -7,7 +7,6 @@ camada de *serving* em miniatura. Exemplo:
 """
 
 import argparse
-import json
 from pathlib import Path
 
 import pandas as pd
@@ -17,11 +16,11 @@ import yaml
 
 from src.features import (
     load_category_maps,
-    load_popularity_ranking,
     map_categorical_columns,
     scale_numeric_columns,
 )
 from src.models import build_model
+from src.utils import load_json
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,9 +52,7 @@ def load_pipeline_artifacts() -> tuple[dict, dict, dict, torch.nn.Module]:
     params = yaml.safe_load(Path("params.yaml").read_text(encoding="utf-8"))
     preprocessing_dir = Path(params["preprocess"]["output_dir"])
     category_maps = load_category_maps(preprocessing_dir / "category_maps.json")
-    scaler_stats = json.loads(
-        (preprocessing_dir / "scaler_stats.json").read_text(encoding="utf-8")
-    )
+    scaler_stats = load_json(preprocessing_dir / "scaler_stats.json")
     checkpoint = torch.load(
         params["train"]["checkpoint_path"], map_location="cpu", weights_only=False
     )
@@ -132,7 +129,7 @@ def popularity_fallback(params: dict, user_id: int, top_k: int) -> None:
     ranking_path = (
         Path(params["preprocess"]["popularity_output_dir"]) / "top_products.json"
     )
-    ranking = pd.DataFrame(load_popularity_ranking(ranking_path)).head(top_k)
+    ranking = pd.DataFrame(load_json(ranking_path)).head(top_k)
     ranking = attach_product_names(ranking)
     print(f"usuário {user_id} sem histórico no dataset [fallback: popularidade]")
     print(f"\nTOP-{top_k} MAIS POPULARES (nº de usuários distintos que compraram):")

@@ -1,6 +1,6 @@
 """Utilitários para serialização e persistência de artefatos.
 
-Centraliza operações genéricas de escrita de artefatos utilizados pelos
+Centraliza operações genéricas de leitura e escrita de artefatos utilizados pelos
 diferentes stages do pipeline.
 """
 
@@ -26,3 +26,19 @@ def save_json(data: Any, path: Path) -> None:
         json.dumps(data, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
+
+
+def load_json(path: Path) -> Any:
+    """Lê e desserializa um arquivo JSON.
+
+    Args:
+        path: Caminho do arquivo JSON.
+
+    Returns:
+        Objeto Python desserializado.
+
+    Raises:
+        json.JSONDecodeError: Se o conteúdo não for um JSON válido.
+        OSError: Se ocorrer um erro durante a leitura.
+    """
+    return json.loads(path.read_text(encoding="utf-8"))

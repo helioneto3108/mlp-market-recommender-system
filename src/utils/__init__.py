@@ -1,5 +1,8 @@
 """Utilitários compartilhados pelo pipeline."""
 
-from src.utils.serialization import save_json
+from src.utils.serialization import load_json, save_json
 
-__all__ = ["save_json"]
+__all__ = [
+    "load_json",
+    "save_json",
+]

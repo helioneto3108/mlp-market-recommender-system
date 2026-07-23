@@ -13,7 +13,6 @@ Uso:
     uv run python -m scripts.register_model
 """
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +23,7 @@ from mlflow import MlflowClient
 
 from src.config import get_settings
 from src.models import build_model
+from src.utils import load_json
 
 REGISTERED_MODEL_NAME = "mlp-temporal-recommender"
 
@@ -62,7 +62,7 @@ def load_model_from_checkpoint(
 def log_registration_run(model: torch.nn.Module, checkpoint: dict) -> str:
     """Loga a run de registro (params, métricas, modelo) e retorna o model_uri."""
     metrics_path = Path("reports/metrics.json")
-    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    metrics = load_json(metrics_path)
     with mlflow.start_run(run_name="register_mlp_temporal"):
         mlflow.log_params(dict(checkpoint["experiment_config"]))
         mlflow.log_metric("best_epoch", checkpoint["epoch"])

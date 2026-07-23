@@ -10,7 +10,6 @@ Duas responsabilidades, ambas com *fit* exclusivamente no split de treino
   partições do treino, sem carregar o dataset inteiro em memória.
 """
 
-import json
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 
@@ -20,6 +19,7 @@ import pandas as pd
 # O índice UNK é contrato entre a codificação e o padding_idx do modelo —
 # importado de src.models para existir uma única fonte de verdade.
 from src.models.mlp import UNK_INDEX
+from src.utils.serialization import load_json
 
 CategoryMaps = dict[str, dict[int, int]]
 ScalerStats = dict[str, dict[str, float]]
@@ -152,7 +152,7 @@ def load_category_maps(path: Path) -> CategoryMaps:
     Returns:
         Mapas com chaves ``int``, idênticos aos originais.
     """
-    raw = json.loads(path.read_text(encoding="utf-8"))
+    raw = load_json(path)
 
     return {
         column: {int(value): index for value, index in mapping.items()}
