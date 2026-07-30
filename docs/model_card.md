@@ -22,7 +22,7 @@
 | **Categorias não vistas** | Índice UNK reservado (`padding_idx=0`, embedding zero) — permite pontuar usuários/produtos fora do vocabulário de treino |
 | **Seleção de modelo** | NDCG@10 no split de validação |
 | **Reprodutibilidade** | `RANDOM_SEED=42` (Python, NumPy, PyTorch); pipeline DVC `preprocess → train → evaluate` |
-| **Autores** | Grupo 16 — POSTECH Tech Challenge Fase 02 |
+| **Autores** | Grupo 02 — POSTECH Tech Challenge Fase 02 |
 | **Licença** | MIT |
 | **Experimento MLflow** | `mlp-market-recommender-system-temporal-v1` |
 
