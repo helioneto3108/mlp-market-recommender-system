@@ -1,0 +1,24 @@
+# Hooks executados antes de cada commit (instalar com: uv run pre-commit install).
+# Garantem que nenhum commit entra fora do padrão de lint/formatação do projeto
+# — o mesmo critério do `make lint`, só que automático.
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.15 # mesma versão do ruff pinada no uv.lock
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=5000] # bloqueia binários grandes (modelos, dados) por engano
+      - id: check-yaml
+      # reports/ e models/ são outputs do pipeline DVC: o `dvc repro` os
+      # regenera byte a byte, então hooks não devem reescrevê-los.
+      - id: end-of-file-fixer
+        exclude: ^(frontend|reports|models)/
+      - id: trailing-whitespace
+        exclude: ^(frontend|reports|models)/
