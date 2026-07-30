@@ -18,7 +18,7 @@ Construído sobre o dataset [Instacart Market Basket](https://www.kaggle.com/com
 experimentos rastreados no **MLflow** (Model Registry com modelo em
 `@production`) e dados versionados no **Google Cloud Storage**.
 
-> Projeto do **Tech Challenge Fase 02 — POSTECH (Grupo 16)**.
+> Projeto do **Tech Challenge Fase 02 — POSTECH (Grupo 02)**.
 
 ---
 
@@ -26,8 +26,7 @@ experimentos rastreados no **MLflow** (Model Registry com modelo em
 
 ### Apresentação em vídeo (Método STAR — 5 min)
 
-<!-- TODO: substituir pelo link do vídeo quando gravado -->
-🚧 *Em produção — link será adicionado aqui.*
+**https://www.youtube.com/watch?v=8GnJN1IQ_VA**
 
 ### MLflow na nuvem (Cloud Run)
 
@@ -283,10 +282,10 @@ mlp-market-recommender-system/
 - [x] MLP com embeddings + early stopping, superando 4 baselines em 4+ métricas
 - [x] MLflow Registry: modelo promovido a `@production`
 - [x] Model Card
-- [ ] Vídeo STAR (5 min)
+- [x] Vídeo STAR (5 min)
 
 ---
 
 ## Licença
 
-[MIT](LICENSE) — POSTECH Tech Challenge Fase 02, Grupo 16.
+[MIT](LICENSE) — POSTECH Tech Challenge Fase 02, Grupo 02.
