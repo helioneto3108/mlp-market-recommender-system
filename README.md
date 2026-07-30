@@ -26,7 +26,7 @@ experimentos rastreados no **MLflow** (Model Registry com modelo em
 
 ### Apresentação em vídeo (Método STAR — 5 min)
 
-**https://www.youtube.com/watch?v=8GnJN1IQ_VA**
+[![Assista à apresentação do projeto](https://img.youtube.com/vi/8GnJN1IQ_VA/maxresdefault.jpg)](https://www.youtube.com/watch?v=8GnJN1IQ_VA)
 
 ### MLflow na nuvem (Cloud Run)
 
